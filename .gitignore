@@ -1,0 +1,8 @@
+*.exe*
+*.out*
+*.DS_Store
+*.html
+*.sample
+*.txt
+*.in
+*.out
