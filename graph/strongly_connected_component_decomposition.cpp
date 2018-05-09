@@ -1,4 +1,4 @@
-// 今日連結成分分解,SCC
+// 強連結成分分解,SCC
 // O(|V|+|E|)
 class strongly_connected_component_decomposition {
 private:
