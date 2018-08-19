@@ -1,5 +1,5 @@
 // 2-SAT
-// 今日連結成分分解(SCC)必須
+// 強連結成分分解(SCC)必須
 class two_sat {
 private:
     strongly_connected_component_decomposition scc;
