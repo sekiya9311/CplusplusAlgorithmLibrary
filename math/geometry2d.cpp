@@ -3,7 +3,7 @@
 namespace geometry2d {
     const double EPS = 1e-10;
     inline double add(double a, double b) {
-        if (abs(a + b) < geometry2d::EPS * (abs(a) + abs(b))) return 0;
+        if (std::abs(a + b) < geometry2d::EPS * (std::abs(a) + std::abs(b))) return 0;
         return a + b;
     }
     inline int sgn(double a, double b = 0.0) {// sign function
@@ -33,7 +33,7 @@ namespace geometry2d {
             return (this->a.x - this->b.x) * (this->a.x - this->b.x) + (this->a.y - this->b.y) * (this->a.y - this->b.y);
         }
         double distance() {
-            return sqrt(this->distSquare());
+            return std::sqrt(this->distSquare());
         }
     };
 
@@ -71,7 +71,7 @@ namespace geometry2d {
             return geometry2d::sgn(geometry2d::add(geometry2d::line(p, this->center).distSquare(), -(this->r * this->r))) == 0;
         }
         double square() {
-            return this->r * this->r * acos(-1.0);
+            return this->r * this->r * std::acos(-1.0);
         }
     };
 };

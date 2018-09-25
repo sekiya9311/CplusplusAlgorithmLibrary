@@ -3,7 +3,7 @@
 namespace geometry3d {
     const long double EPS = 1e-10;
     inline double add(double a, double b) {
-        if (abs(a + b) < geometry3d::EPS * (abs(a) + abs(b))) return 0;
+        if (std::abs(a + b) < geometry3d::EPS * (std::abs(a) + std::abs(b))) return 0;
         return a + b;
     }
     inline int sgn(double a, double b = 0.0) {// sign function
@@ -27,7 +27,7 @@ namespace geometry3d {
             return this->x * this->x + this->y * this->y + this->z * this->z;
         }
         double distance() {
-            return sqrt(this->norm());
+            return std::sqrt(this->norm());
         }
     };
 
