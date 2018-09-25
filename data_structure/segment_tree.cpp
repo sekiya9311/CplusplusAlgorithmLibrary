@@ -6,11 +6,11 @@ private:
     const int n;
     std::vector<value_type> st;
     std::function<value_type(value_type, value_type)> func;
-    value_type initVal;
+    value_type init_val;
     value_type query(int l, int r, int k, int L, int R) {
-        if (R <= l || r <= L) return initVal;
+        if (R <= l || r <= L) return init_val;
         if (l <= L && R <= r) return st[k];
-        value_type res = initVal;
+        value_type res = init_val;
         int h = (L + R) >> 1;
         if (l < h) res = func(res, query(l, r, (k << 1) + 1, L, h));
         if (h < r) res = func(res, query(l, r, (k << 1) + 2, h, R));
@@ -32,7 +32,7 @@ public:
     segment_tree(int _n,
                 value_type _initVal,
                 std::function<value_type(value_type, value_type)> _func)
-        : n(_n), initVal(_initVal), st(_n << 2, _initVal), func(_func){}
+        : n(_n), init_val(_initVal), st(_n << 2, _initVal), func(_func){}
     //範囲 [l, r) !!!!!
     value_type query(int l, int r) {
         assert(this->n != -1 && 0 <= l && r <= this->n && l <= r);

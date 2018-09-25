@@ -9,13 +9,13 @@ private:
     std::vector<cost_type> cost;
     static const int MAX_LOG = 20;
     bool valid = false;
-    void dfs(const int now, const int par, const int nowDepth, const cost_type nowCost) {
+    void dfs(const int now, const int par, const int nowDepth, const cost_type now_cost) {
         depth[now] = nowDepth;
         parent[0][now] = par;
-        cost[now] = nowCost;
+        cost[now] = now_cost;
         for (auto &&e : graph[now]) {
             if (e.first != par) {
-                dfs(e.first, now, nowDepth + 1, nowCost + e.second);
+                dfs(e.first, now, nowDepth + 1, now_cost + e.second);
             }
         }
     }

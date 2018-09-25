@@ -42,37 +42,37 @@ public:
 };
 
 mod_calc<MOD> mc;
-int memoFact[MAX], memoInvFact[MAX];
+int memo_fact[MAX], memo_inv_fact[MAX];
 
 inline int fact(int n) {
-    if (memoFact[n] != -1) return memoFact[n];
-    return memoFact[n] = (n == 0 ? 1 : mc.mul(n, fact(n - 1)));
+    if (memo_fact[n] != -1) return memo_fact[n];
+    return memo_fact[n] = (n == 0 ? 1 : mc.mul(n, fact(n - 1)));
 }
 
-inline int invFact(int n) {
-    if (memoInvFact[n] != -1) return memoInvFact[n];
-    return memoInvFact[n] = mc.inverse(fact(n));
+inline int inv_fact(int n) {
+    if (memo_inv_fact[n] != -1) return memo_inv_fact[n];
+    return memo_inv_fact[n] = mc.inverse(fact(n));
 }
 
-inline long long Perm(int n, int r) {
-    return mc.mul(fact(n), invFact(n - r));
+inline long long perm(int n, int r) {
+    return mc.mul(fact(n), inv_fact(n - r));
 }
 
 inline long long comb(int n, int r) {
-    return mc.mul(mc.mul(fact(n), invFact(r)), invFact(n - r));
+    return mc.mul(mc.mul(fact(n), inv_fact(r)), inv_fact(n - r));
 }
 
 // M個の物をN人で分ける
-inline long long combWithRepetition(int M, int N) {
+inline long long comb_with_repetition(int M, int N) {
     return comb(M + N - 1, N - 1);
 }
 
 //最初に呼んで♪ O(MAX)
 inline void init() {
-    memset(memoFact, -1, sizeof(memoFact));
-    memset(memoInvFact, -1, sizeof(memoInvFact));
+    memset(memo_fact, -1, sizeof(memo_fact));
+    memset(memo_inv_fact, -1, sizeof(memo_inv_fact));
     for (int i = 0; i < MAX; i++) {
         fact(i);
-        invFact(i);
+        inv_fact(i);
     }
 }
