@@ -10,18 +10,18 @@ namespace geometry3d {
         return a < b - EPS ? -1 : a > b + EPS ? 1 : 0;
     }
 
-    struct Point {
+    struct point {
         double x, y, z;
-        Point() {}
-        Point(double _x, double _y, double _z) : x(_x), y(_y), z(_z) {}
-        const geometry3d::Point operator+ (const geometry3d::Point &p) {
-            return Point(geometry3d::add(this->x, p.x), geometry3d::add(this->y, p.y), geometry3d::add(this->z, p.z));
+        point() {}
+        point(double _x, double _y, double _z) : x(_x), y(_y), z(_z) {}
+        const geometry3d::point operator+ (const geometry3d::point &p) {
+            return point(geometry3d::add(this->x, p.x), geometry3d::add(this->y, p.y), geometry3d::add(this->z, p.z));
         }
-        const geometry3d::Point operator- (const geometry3d::Point &p) {
-            return Point(geometry3d::add(this->x, -p.x), geometry3d::add(this->y, -p.y), geometry3d::add(this->z, -p.z));
+        const geometry3d::point operator- (const geometry3d::point &p) {
+            return point(geometry3d::add(this->x, -p.x), geometry3d::add(this->y, -p.y), geometry3d::add(this->z, -p.z));
         }
-        const geometry3d::Point operator* (double d) {
-            return Point(this->x * d, this->y * d, this->z * d);
+        const geometry3d::point operator* (double d) {
+            return point(this->x * d, this->y * d, this->z * d);
         }
         double norm() { //外積として求めたベクトルの絶対値の2乗
             return this->x * this->x + this->y * this->y + this->z * this->z;
@@ -31,17 +31,17 @@ namespace geometry3d {
         }
     };
 
-    double naiseki(const geometry3d::Point &p1, const geometry3d::Point &p2) {
+    double naiseki(const geometry3d::point &p1, const geometry3d::point &p2) {
         return p1.x * p2.x + p1.y * p2.y + p1.z * p2.z;
     }
-    geometry3d::Point gaiseki(const geometry3d::Point &p1, const geometry3d::Point &p2) {
-        return geometry3d::Point(p1.y * p2.z - p2.y * p1.z, -(p1.x * p2.z - p2.x * p1.z), p1.x * p2.y - p2.x * p1.y);
+    geometry3d::point gaiseki(const geometry3d::point &p1, const geometry3d::point &p2) {
+        return geometry3d::point(p1.y * p2.z - p2.y * p1.z, -(p1.x * p2.z - p2.x * p1.z), p1.x * p2.y - p2.x * p1.y);
     }
 
-    struct Line {
-        geometry3d::Point a, b, dis;
-        Line() {}
-        Line(const geometry3d::Point &_a, const geometry3d::Point &_b) : a(_a), b(_b), dis(b - a) {}
+    struct line {
+        geometry3d::point a, b, dis;
+        line() {}
+        line(const geometry3d::point &_a, const geometry3d::point &_b) : a(_a), b(_b), dis(b - a) {}
         double distSquare() {
             const double X = this->a.x - this->b.x;
             const double Y = this->a.y - this->b.y;
@@ -52,13 +52,13 @@ namespace geometry3d {
             return this->distSquare();
         }
     };
-    using Segment = geometry3d::Line;
+    using Segment = geometry3d::line;
 
-    double distanceLineToPoint(geometry3d::Line &l, geometry3d::Point &p) {
+    double distance_line_to_point(geometry3d::line &l, geometry3d::point &p) {
         return geometry3d::gaiseki(l.dis, p - l.a).distance() / l.dis.distance();
     }
 
-    double distanceSegmentToPoint(geometry3d::Segment &l, geometry3d::Point &p) {
+    double distance_segment_to_point(geometry3d::Segment &l, geometry3d::point &p) {
         if (geometry3d::naiseki(l.b - l.a, p - l.a) < 0) {
             auto buf = p - l.a;
             return buf.distance();
@@ -67,32 +67,32 @@ namespace geometry3d {
             auto buf = p - l.b;
             return buf.distance();
         }
-        return geometry3d::distanceLineToPoint(l, p);
+        return geometry3d::distance_line_to_point(l, p);
     }
 
-    struct Ball {
-        geometry3d::Point center;
+    struct ball {
+        geometry3d::point center;
         double r;
-        Ball() {}
-        Ball(double _x, double _y, double _z, double _r) : center(_x, _y, _z), r(_r) {}
-        Ball(const geometry3d::Point &_c, double _r) : center(_c), r(_r) {}
-        bool inside(const geometry3d::Point &p) {
+        ball() {}
+        ball(double _x, double _y, double _z, double _r) : center(_x, _y, _z), r(_r) {}
+        ball(const geometry3d::point &_c, double _r) : center(_c), r(_r) {}
+        bool inside(const geometry3d::point &p) {
             const double X = p.x - this->center.x;
             const double Y = p.y - this->center.y;
             const double Z = p.z - this->center.z;
             return sgn(X * X + Y * Y + Z * Z, -(this->r * this->r)) == -1;
         }
         bool inside(geometry3d::Segment &s) {
-            return geometry3d::sgn(geometry3d::distanceSegmentToPoint(s, this->center) - this->r) == -1;
+            return geometry3d::sgn(geometry3d::distance_segment_to_point(s, this->center) - this->r) == -1;
         }
-        bool on_seg(const geometry3d::Point &p) {
+        bool on_seg(const geometry3d::point &p) {
             const double X = p.x - this->center.x;
             const double Y = p.y - this->center.y;
             const double Z = p.z - this->center.z;
             return sgn(X * X + Y * Y + Z * Z, -(this->r * this->r)) == 0;
         }
         bool on_seg(geometry3d::Segment &s) {
-            return geometry3d::sgn(geometry3d::distanceSegmentToPoint(s, this->center) - this->r) == 0;
+            return geometry3d::sgn(geometry3d::distance_segment_to_point(s, this->center) - this->r) == 0;
         }
     };
 };
