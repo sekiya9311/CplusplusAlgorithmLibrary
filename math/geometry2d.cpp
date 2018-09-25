@@ -14,13 +14,13 @@ namespace geometry2d {
         double x, y;
         point() {}
         point(double _x, double _y) : x(_x), y(_y) {}
-        const geometry2d::point operator+ (const geometry2d::point p) {
+        const geometry2d::point operator+ (const geometry2d::point p) const {
             return point(geometry2d::add(this->x, p.x), geometry2d::add(this->y, p.y));
         }
-        const geometry2d::point operator- (const geometry2d::point p) {
+        const geometry2d::point operator- (const geometry2d::point p) const {
             return point(geometry2d::add(this->x, -p.x), geometry2d::add(this->y, -p.y));
         }
-        const geometry2d::point operator* (double d) {
+        const geometry2d::point operator* (double d) const {
             return point(this->x * d, this->y * d);
         }
     };
@@ -29,33 +29,46 @@ namespace geometry2d {
         geometry2d::point a, b, dis;
         line() {}
         line(const geometry2d::point &_a, const geometry2d::point &_b) : a(_a), b(_b), dis(b - a) {}
-        double distSquare() { //距離の二乗
+        const double distSquare() const { //距離の二乗
             return (this->a.x - this->b.x) * (this->a.x - this->b.x) + (this->a.y - this->b.y) * (this->a.y - this->b.y);
         }
-        double distance() {
+        const double distance() const {
             return std::sqrt(this->distSquare());
         }
     };
 
-    double naiseki(const geometry2d::point &p1, const geometry2d::point &p2) {
+    const double naiseki(const geometry2d::point &p1, const geometry2d::point &p2) {
         return geometry2d::add(p1.x * p2.x, p1.y * p2.y);
     }
-    double gaiseki(const geometry2d::point &p1, const geometry2d::point &p2) {
+    const double gaiseki(const geometry2d::point &p1, const geometry2d::point &p2) {
         return geometry2d::add(p1.x * p2.y, -p1.y * p2.x);
     }
-    point intersection(geometry2d::line &l1, geometry2d::line &l2) {//p1-p2とq1-q2の交点
+    const geometry2d::point intersection(geometry2d::line &l1, geometry2d::line &l2) {//p1-p2とq1-q2の交点
         auto buf = (l1.b - l1.a);
         return l1.a + buf * (gaiseki(l2.b - l2.a, l2.a - l1.a) / gaiseki(l2.b - l2.a, l1.b - l1.a));
     }
-    bool colinear(const geometry2d::point &p1, const geometry2d::point &p2, const geometry2d::point &p3) {// 三点が一直線上にあるか
+    const bool colinear(const geometry2d::point &p1, const geometry2d::point &p2, const geometry2d::point &p3) {// 三点が一直線上にあるか
         return (p3.y - p1.y) * (p2.x - p1.x) == (p2.y - p1.y) * (p3.x - p1.x);
     }
-    bool on_seg(geometry2d::point &p, geometry2d::line &l) {//線分l上にこの点pがあるか
+    const bool on_seg(const geometry2d::point &p, const geometry2d::line &l) {//線分l上にこの点pがあるか
         return geometry2d::sgn(geometry2d::gaiseki((l.a - p), (l.b - p))) == 0 && geometry2d::naiseki(l.a - p, l.b - p) <= 0;
     }
-    bool is_intersect(geometry2d::line &l1, geometry2d::line &l2) { // l1とl2が交差してるか
+    const bool is_intersect(geometry2d::line &l1, geometry2d::line &l2) { // l1とl2が交差してるか
         point intersect = intersection(l1, l2);
         return on_seg(intersect, l1) && on_seg(intersect, l2);
+    }
+    const bool is_left(const geometry2d::line &l, const geometry2d::point &p, const bool permit_on_seg = true) {// !!! ベクトル(a, b)に対して !!!
+        if (permit_on_seg && geometry2d::on_seg(p, l)) {
+            return true;
+        }
+        const auto foo = p - l.a;
+        return geometry2d::sgn(l.dis.x * foo.y - l.dis.y * foo.x) == 1;
+    }
+    const bool is_right(const geometry2d::line &l, const geometry2d::point &p, const bool permit_on_seg = true) {// !!! ベクトル(a, b)に対して !!!
+        if (permit_on_seg && geometry2d::on_seg(p, l)) {
+            return true;
+        }
+        return !geometry2d::is_left(l, p, false);
     }
 
     struct circle {//円
