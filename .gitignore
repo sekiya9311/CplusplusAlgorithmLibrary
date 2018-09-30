@@ -6,3 +6,4 @@
 *.txt
 *.in
 *.out
+.vscode/
