@@ -11,5 +11,10 @@ const int MOD = 1e9 + 7;
 
 using namespace std;
 
-int main() { 
+int main() {
+  util_test();
+  data_structure_test();
+  graph_test();
+  math_test();
+  string_test();
 }
