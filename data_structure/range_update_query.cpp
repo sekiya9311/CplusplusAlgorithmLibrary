@@ -5,7 +5,7 @@ class range_update_query {
 private:
      std::vector<T> data, lazy;
      std::vector<bool> valid, lazy_flag;
-     const int sz;
+     int sz;
      void push(int k) {
           if (this->lazy_flag[k]) {
                this->valid[k] = true;

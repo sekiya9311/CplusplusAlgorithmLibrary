@@ -9,7 +9,7 @@ private:
      std::vector<bool> valid, lazyFlag;
      ctype comp;
      const T initVal;
-     const int sz;
+     int sz;
      void push(int k) {
           if (this->lazyFlag[k]) {
                this->valid[k] = true;
