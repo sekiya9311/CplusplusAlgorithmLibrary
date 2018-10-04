@@ -1,0 +1,3 @@
+language: cpp
+script:
+  - g++ -std=c++14 -O2 -Wall test/for_test.cpp && ./a.out
