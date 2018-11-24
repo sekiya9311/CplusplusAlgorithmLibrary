@@ -1,5 +1,6 @@
 // 2次元幾何
-
+#include <cmath>
+#include <algorithm>
 namespace geometry2d {
     const double EPS = 1e-10;
     inline double add(double a, double b) {
@@ -22,6 +23,64 @@ namespace geometry2d {
         }
         const geometry2d::point operator* (double d) const {
             return point(this->x * d, this->y * d);
+        }
+        bool operator==(const geometry2d::point &other) const {
+            return sgn(x, other.x) == 0 && sgn(y, other.y) == 0;
+        }
+        bool operator!=(const geometry2d::point &other) const {
+            return !(*this == other);
+        }
+        const point clone() const {
+            return point(x, y);
+        }
+    };
+
+    struct rectangle {
+        enum class direction {
+            left_down,
+            left_up,
+            right_down,
+            right_up
+        };
+        point left_down, right_up;
+        rectangle() {}
+        rectangle(point a, point b) : 
+            left_down(std::min(a.x, b.x), std::min(a.y, b.y)), 
+            right_up(std::max(a.x, b.x), std::max(a.y, b.y)) {}
+        rectangle(double x1, double y1, double x2, double y2)
+            : left_down(x1, y1), right_up(x2, y2) {}
+        const double square() const {
+            return std::abs(left_down.x - right_up.x) * std::abs(left_down.y - right_up.y);
+        }
+        bool operator==(const rectangle &other) const {
+            return left_down == other.left_down && right_up == other.right_up;
+        }
+        bool operator!=(const rectangle &other) const {
+            return !(*this == other);
+        }
+        const point get_point(direction dir) const {
+            switch (dir) {
+                case direction::left_down: {
+                    return left_down.clone();
+                    break;
+                }
+                case direction::left_up: {
+                    return point(std::min(left_down.x, right_up.x), std::max(left_down.y, right_up.y));
+                    break;
+                }
+                case direction::right_down: {
+                    return point(std::max(left_down.x, right_up.x), std::min(left_down.y, right_up.y));
+                    break;
+                }
+                case direction::right_up: {
+                    return right_up.clone();
+                    break;
+                }
+                default: {
+                    throw std::invalid_argument("dir");
+                    break;
+                }
+            }
         }
     };
 
@@ -69,6 +128,18 @@ namespace geometry2d {
             return true;
         }
         return !geometry2d::is_left(l, p, false);
+    }
+    const geometry2d::rectangle intersect(const geometry2d::rectangle &a, const geometry2d::rectangle b) { // 2つの長方形の重なっている部分を返す
+        const auto sx = std::max(a.get_point(rectangle::direction::left_down).x, b.get_point(rectangle::direction::left_down).x);
+        const auto sy = std::max(a.get_point(rectangle::direction::left_down).y, b.get_point(rectangle::direction::left_down).y);
+        const auto gx = std::min(a.get_point(rectangle::direction::right_up).x, b.get_point(rectangle::direction::right_up).x);
+        const auto gy = std::min(a.get_point(rectangle::direction::right_up).y, b.get_point(rectangle::direction::right_up).y);
+        const auto len_x = gx - sx + 1;
+        const auto len_y = gy - sy + 1;
+        if (len_x > 0 && len_y > 0) {
+            return geometry2d::rectangle(sx, sy, gx, gy);
+        }
+        return geometry2d::rectangle(0, 0, 0, 0);
     }
 
     struct circle {//円
