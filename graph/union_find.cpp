@@ -1,8 +1,14 @@
 // UnionFind,素集合データ構造,DisjointSet
 
+template<typename weight_type = int>
 class union_find {
+    static_assert(
+        std::is_arithmetic<weight_type>::value,
+        "Invalid weight type");
 private:
     std::vector<int> uni;
+    std::vector<int> edge_count_;
+    std::vector<weight_type> weights;
     int size_;
     const void check(const int n) const {
         if (this->group_size() < 0) {
@@ -13,10 +19,15 @@ private:
         }
     }
 public:
-    union_find() : size_(-1) {}
+    union_find() : uni(0), edge_count_(0), weights(0), size_(-1) {}
     union_find(const int n)
-        : uni(n, -1), size_(n) {
+        : uni(n, -1), edge_count_(n), weights(n), size_(n) {
         this->check(n - 1);
+    }
+    union_find(const std::vector<weight_type> &_weights)
+        : uni(_weights.size(), -1), edge_count_(_weights.size()),
+        weights(_weights), size_(_weights.size()) {
+        this->check((int)_weights.size() - 1);
     }
     bool same(const int a, const int b) {
         this->check(a);
@@ -32,6 +43,7 @@ public:
     bool unite(int a, int b) {
         a = this->find(a);
         b = this->find(b);
+        this->edge_count_[a]++;
         if (a == b) {
             return false;
         }
@@ -40,6 +52,8 @@ public:
             std::swap(a, b);
         }
         this->uni[a] += this->uni[b];
+        this->weights[a] += this->weights[b];
+        this->edge_count_[a] += this->edge_count_[b];
         this->uni[b] = a;
         return true;
     }
@@ -52,5 +66,13 @@ public:
     const int size(const int a) {
         this->check(a);
         return -this->uni[this->find(a)];
+    }
+    const int edge_count(const int a) {
+        this->check(a);
+        return this->edge_count_[this->find(a)];
+    }
+    const weight_type weight(const int a) {
+        this->check(a);
+        return this->weights[this->find(a)];
     }
 };
