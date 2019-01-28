@@ -17,6 +17,39 @@
 #include "../graph/ford_fulkerson.cpp"
 #include "../graph/dijkstra_with_route_count.cpp"
 
-void graph_test() {
+void union_find_test() {
+  {
+    union_find<> uf(5);
+    assert(!uf.same(0, 1));
+    assert(uf.size(0) == 1);
+    assert(uf.all_size() == 5);
+    assert(uf.group_size() == 5);
+    assert(uf.edge_count(0) == 0);
+    assert(uf.find(0) == 0);
+    assert(uf.unite(0, 1));
+    assert(uf.same(0, 1));
+    assert(!uf.unite(0, 1));
+    assert(uf.all_size() == 5);
+    assert(uf.group_size() == 4);
+    assert(uf.size(0) == uf.size(1));
+    assert(uf.size(0) == 2);
+    assert(uf.size(2) == 1);
+    assert(uf.find(1) == 0);
+    assert(uf.unite(2, 0));
+    assert(!uf.unite(1, 2));
+    assert(uf.edge_count(0) == uf.edge_count(2));
+    assert(uf.edge_count(0) == 4);
+  }
+  {
+    std::vector<long long> weights(5);
+    std::iota(begin(weights), end(weights), 1);
+    union_find<long long> uf(weights);
+    assert(uf.weight(0) == 1);
+    uf.unite(0, 1);
+    assert(uf.weight(0) == 3);
+  }
+}
 
+void graph_test() {
+  union_find_test();
 }
