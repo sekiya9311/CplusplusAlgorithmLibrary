@@ -7,8 +7,8 @@
 template<typename T = int>
 class binary_indexed_tree {
 private:
-    std::vector<T> bit;
     const int N;
+    std::vector<T> bit;
 public:
     binary_indexed_tree() : N(-1) {}
     binary_indexed_tree(int n) : N(n), bit(n, 0) {}
