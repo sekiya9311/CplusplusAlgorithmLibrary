@@ -1,21 +1,32 @@
 // xor_shift,ランダム
 #include <random>
 class xor_shift {
-private:
-    uint32_t x = 123456789;
-    uint32_t y = 362436069;
-    uint32_t z = 521288629;
-    uint32_t w;
 public:
-    xor_shift(uint32_t seed = 0)
+    using result_type = uint32_t;
+
+    static result_type min() {
+        return std::numeric_limits<result_type>::min();
+    }
+
+    static result_type max() {
+        return std::numeric_limits<result_type>::max();
+    }
+
+private:
+    result_type x = 123456789;
+    result_type y = 362436069;
+    result_type z = 521288629;
+    result_type w;
+public:
+    xor_shift(result_type seed = 0)
         : w(seed ? seed : 88675123) {this->random_loop();}
     void random_loop() {
         int loop_num = this->next() % 100;
         while (loop_num--) this->next();
     }
-    uint32_t next(bool heavy_ok = false) {
+    result_type next(bool heavy_ok = false) {
         if (heavy_ok) this->random_loop();
-        uint32_t t = this->x ^ (this->x << 11);
+        const auto t = this->x ^ (this->x << 11);
         this->x = this->y;
         this->y = this->z;
         this->z = this->w;
@@ -26,7 +37,7 @@ public:
         return ((((uint64_t)this->next(heavy_ok)) << 32)
                     | this->next(heavy_ok));
     }
-    uint32_t operator()(bool heavy_ok = false) {
+    result_type operator()(bool heavy_ok = false) {
         return this->next(heavy_ok);
     }
 };
