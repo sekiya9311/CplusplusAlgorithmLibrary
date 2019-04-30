@@ -13,6 +13,18 @@
 #include "../math/divisor.cpp"
 #include "../math/miller_labin.cpp"
 
+void divisor_test() {
+    const int N = 20;
+    std::vector<long long> n_divs = {1, 2, 4, 5, 10};
+    std::set<int> n_divs_set(std::begin(n_divs), std::end(n_divs));
+    
+    const auto divs = divisor(20, false);
+    assert(n_divs_set == std::set<int>(std::begin(divs), std::end(divs)));
+
+    const auto divs_ordered = divisor(20, true);
+    assert(divs_ordered == n_divs);
+}
+
 void point_test() {
     using namespace geometry2d;
     {
@@ -43,6 +55,7 @@ void rectangle_test() {
 }
 
 void math_test() {
+    divisor_test();
     point_test();
     rectangle_test();
 }
