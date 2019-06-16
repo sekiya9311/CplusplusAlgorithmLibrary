@@ -7,7 +7,7 @@
 template<int mod>
 class binary_indexed_tree_by_mod {
 private:
-    const int N;
+    int N;
     std::vector<int> bit;
 
     void add_by_mod(int &a, int b) {
@@ -17,7 +17,7 @@ private:
     }
 
 public:
-    binary_indexed_tree_by_mod() : N(-1) {}
+    binary_indexed_tree_by_mod() {}
     binary_indexed_tree_by_mod(int n) : N(n), bit(n, 0) {}
     // bit[point]にnum追加
     void add(int point, long long val) {

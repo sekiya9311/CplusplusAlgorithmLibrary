@@ -7,10 +7,10 @@
 template<typename T = int>
 class binary_indexed_tree {
 private:
-    const int N;
+    int N;
     std::vector<T> bit;
 public:
-    binary_indexed_tree() : N(-1) {}
+    binary_indexed_tree() {}
     binary_indexed_tree(int n) : N(n), bit(n, 0) {}
     // bit[point]にnum追加
     void add(int point, T val) {
