@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 
 #include "../data_structure/binary_indexed_tree.cpp"
+#include "../data_structure/binary_indexed_tree_by_mod.cpp"
 #include "../data_structure/binary_indexed_tree_2d.cpp"
 #include "../data_structure/binary_indexed_tree_2d_by_mod.cpp"
 #include "../data_structure/rational_number.cpp"
@@ -26,6 +27,22 @@ void binary_indexed_tree_test() {
   assert(bit.sum(1, 4) == (4 * 5) / 2 - 1); // [1, 4)
   assert(bit.sum(0, L) == (L * (L + 1)) / 2); // [0, L)
   assert(bit.sum(L) == bit.sum(0, L));
+}
+
+void binary_indexed_tree_by_mod_test() {
+    const int MOD = 5;
+    const int L = 5;
+    binary_indexed_tree_by_mod<MOD> bit(L);
+    for (int i = 0; i < L; i++) {
+        bit.add(i, i + 1);
+    }
+
+    // idx: [ 0, 1, 2, 3, 4 ]
+    // val: [ 1, 2, 3, 4, 5 ]
+    assert(bit.sum(0) == 0); // [0, 0)
+    assert(bit.sum(1, 4) == ((4 * 5) / 2 - 1) % MOD); // [1, 4)
+    assert(bit.sum(0, L) == ((L * (L + 1)) / 2) % MOD); // [0, L)
+    assert(bit.sum(L) == bit.sum(0, L));
 }
 
 void binary_indexed_tree_2d_test() {
@@ -75,6 +92,7 @@ void binary_indexed_tree_2d_by_mod_test() {
 
 void data_structure_test() {
   binary_indexed_tree_test();
+  binary_indexed_tree_by_mod_test();
   binary_indexed_tree_2d_test();
   binary_indexed_tree_2d_by_mod_test();
 }
