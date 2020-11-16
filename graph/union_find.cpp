@@ -6,6 +6,8 @@ class union_find {
         std::is_arithmetic<weight_type>::value,
         "Invalid weight type");
 private:
+    const std::function<void(int, int)> noop = [](int aa, int bb){};
+
     std::vector<int> uni;
     std::vector<int> edge_count_;
     std::vector<weight_type> weights;
@@ -41,6 +43,9 @@ public:
             this->uni[a] = this->find(this->uni[a]);
     }
     bool unite(int a, int b) {
+        return unite(a, b, noop);
+    }
+    bool unite(int a, int b, const std::function<void(int, int)> &f) {
         a = this->find(a);
         b = this->find(b);
         this->edge_count_[a]++;
@@ -51,6 +56,7 @@ public:
         if (this->uni[a] > this->uni[b]) {
             std::swap(a, b);
         }
+        f(a, b);
         this->uni[a] += this->uni[b];
         this->weights[a] += this->weights[b];
         this->edge_count_[a] += this->edge_count_[b];
